@@ -28,7 +28,6 @@ def preprocess_data(examples):
     # Normalize pixel values to [0, 1]
     images = images.float() / 255.0
 
-
     return {"pixel_values": images, "labels": _labels}
 
 
@@ -124,16 +123,16 @@ for epoch in range(num_epochs):
         best_val_loss = val_loss
         early_stopping_counter = 0
         # Save the best model checkpoint
-        torch.save(model.state_dict(), 'best_model.pth')
-        logger.info(f'Best model checkpoint saved. Val Loss: {best_val_loss:.4f}')
+        torch.save(model.state_dict(), "best_model.pth")
+        logger.info(f"Best model checkpoint saved. Val Loss: {best_val_loss:.4f}")
     else:
         early_stopping_counter += 1
         if early_stopping_counter >= early_stopping_patience:
-            logger.info(f'Early stopping triggered. Best Val Loss: {best_val_loss:.4f}')
+            logger.info(f"Early stopping triggered. Best Val Loss: {best_val_loss:.4f}")
             break
 
 # Load the best model checkpoint
-model.load_state_dict(torch.load('best_model.pth'))
+model.load_state_dict(torch.load("best_model.pth"))
 
 # Evaluate the best model on the test set
 model.eval()
@@ -141,9 +140,9 @@ test_loss = 0.0
 test_correct = 0
 test_total = 0
 with torch.no_grad():
-    for batch in tqdm(val_dataloader, desc='Test'):
-        inputs = batch['pixel_values'].to(device, non_blocking=True)
-        targets = batch['labels'].to(device, non_blocking=True)
+    for batch in tqdm(val_dataloader, desc="Test"):
+        inputs = batch["pixel_values"].to(device, non_blocking=True)
+        targets = batch["labels"].to(device, non_blocking=True)
 
         outputs = model(inputs)
         loss = criterion(outputs, targets)
@@ -156,10 +155,9 @@ with torch.no_grad():
 test_loss /= len(val_dataloader)
 test_accuracy = test_correct / test_total
 
-logger.info(f'Test Loss: {test_loss:.4f}, Test Accuracy: {test_accuracy:.4f}')
+logger.info(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_accuracy:.4f}")
 
 # Close the TensorBoard writer
 writer.close()
 
-logger.info('Training completed.')
-
+logger.info("Training completed.")
